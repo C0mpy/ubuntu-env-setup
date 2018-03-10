@@ -67,10 +67,10 @@ sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/i
 
 # ---JAVA---
 # prompt user to choose if he needs JAVA packages
-echo "${CYAN}Do you want a ${RED}BASIC ${CYAN}JAVA environment? [Y/n]${NC}"
-read BASIC_JAVA
-if [ "$BASIC_JAVA" = "y" ] || [ "$BASIC_JAVA" = "Y" ]; then
-	echo "${GREEN}INSTALLING JDK 1.8${NC}"
+echo "${CYAN}Do you want a ${RED}JAVA ${CYAN}environment? [Y/n]${NC}"
+read JAVA
+if [ "$JAVA" = "y" ] || [ "$JAVA" = "Y" ]; then
+	echo "${GREEN}INSTALLING JDK 1.8...${NC}"
 	apt-get install default-jdk -y
 	
 	# find dir on path: /usr/lib/jvm with name matching: java-1.*.*-openjdk-* pattern and save its path to variable
@@ -78,8 +78,17 @@ if [ "$BASIC_JAVA" = "y" ] || [ "$BASIC_JAVA" = "Y" ]; then
 	# add it to ~/.bashrc
 	COMMENT_LINE="# setting JAVA_HOME path"
 	JAVA_PATH_LINE="export JAVA_HOME=\"${JAVA_PATH}\""
+
 	grep -qF -- "$COMMENT_LINE" "$PROFILE" || echo "$COMMENT_LINE" >> "$PROFILE"
 	grep -qF -- "$JAVA_PATH_LINE" "$PROFILE" || echo "$JAVA_PATH_LINE" >> "$PROFILE"
-else
-	echo "BASIC JAVA WAS NOT REQUESTED"
+
+	# --MAVEN--
+	echo "${GREEN}INSTALLING maven...${NC}"
+	apt-get install maven -y
+
+	# --GRADLE--
+	echo "${GREEN}INSTALLING gradle...${NC}"
+	add-apt-repository ppa:cwchien/gradle -y
+	apt-get update
+	apt-get install gradle -y
 fi
