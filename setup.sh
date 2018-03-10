@@ -1,5 +1,4 @@
 #!/bin/sh
-
 clear
 
 # paths to important files
@@ -13,16 +12,40 @@ CYAN='\033[0;36m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # no color
 
+
 echo "${YELLOW}PACKAGE UPDATE...${NC}"
 apt-get update
+
 
 # ---curl---
 echo "${GREEN}INSTALLING curl...${NC}"
 apt-get install curl -y
 
+
 # ---git---
 echo "${GREEN}INSTALLING git...${NC}"
 apt-get install git -y
+
+# bash alias git -> g
+COMMENT_LINE="# alias git -> g"
+LINE="alias g='git'"
+
+grep -qF -- "$COMMENT_LINE" "$BASHRC" || echo "$COMMENT_LINE" >> "$BASHRC"
+grep -qF -- "$LINE" "$BASHRC" || echo "$LINE" >> "$BASHRC"
+
+# git alias status -> st
+git config --global alias.st status
+# git alias commit -> cm
+git config --global alias.cm commit
+# git alias add -> a
+git config --global alias.a add
+# git alias rebase -> rb
+git config --global alias.rb rebase
+# git alias branch -> br
+git config --global alias.br branch
+# git alias checkout -> ch
+git config --global alias.ch checkout
+
 
 # ---ZSH SHELL---
 echo "${GREEN}INSTALLING zsh_shell...${NC}"
@@ -34,12 +57,13 @@ COMMENT_LINE="# setting ZSH for default bash"
 EXPORT_LINE="export SHELL=/bin/zsh"
 EXEC_LINE="exec /bin/zsh -l"
 
-grep -qF -- "$COMMENT_LINE" "$BASHRC" || echo "$COMMENT_LINE" >> "$BASHRC_LC"
+grep -qF -- "$COMMENT_LINE" "$BASHRC" || echo "$COMMENT_LINE" >> "$BASHRC"
 grep -qF -- "$EXPORT_LINE" "$BASHRC" || echo "$EXPORT_LINE" >> "$BASHRC"
 grep -qF -- "$EXEC_LINE" "$BASHRC" || echo "$EXEC_LINE" >> "$BASHRC"
 # install oh-my-zsh
 echo "${GREEN}INSTALLING oh-my-zsh...${NC}"
 sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+
 
 # ---JAVA---
 # prompt user to choose if he needs JAVA packages
@@ -59,4 +83,3 @@ if [ "$BASIC_JAVA" = "y" ] || [ "$BASIC_JAVA" = "Y" ]; then
 else
 	echo "BASIC JAVA WAS NOT REQUESTED"
 fi
-
